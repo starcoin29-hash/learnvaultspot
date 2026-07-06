@@ -4,30 +4,33 @@ import { getBlogPosts } from '../actions/blog';
 
 export const dynamic = 'force-dynamic';
 
-function getCleanSiteUrl(): string {
-  let url = process.env.NEXT_PUBLIC_APP_URL || '';
-  
-  // Strip surrounding quotes and whitespace
-  url = url.replace(/^['"]|['"]$/g, '').trim();
-  
-  if (!url) {
-    return 'https://learnvault.com'; // Default fallback
-  }
-  
-  // Enforce protocol prefix
+const FALLBACK_URL = 'https://learnvaultspot.vercel.app';
+
+function getSiteUrl(): string {
+  const raw = (process.env.NEXT_PUBLIC_APP_URL || '').replace(/^['"]|['"]$/g, '').trim();
+
+  if (!raw) return FALLBACK_URL;
+
+  let url = raw;
   if (!/^https?:\/\//i.test(url)) {
     url = `https://${url}`;
   }
-  
-  // Remove trailing slashes
-  return url.replace(/\/+$/, '');
+  url = url.replace(/\/+$/, '');
+
+  // Final validation — if new URL() throws, fall back
+  try {
+    new URL(url);
+    return url;
+  } catch {
+    return FALLBACK_URL;
+  }
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = getCleanSiteUrl();
-  
+  const siteUrl = getSiteUrl();
+
   // Static Routes
-  const staticRoutes = [
+  const staticRoutes: MetadataRoute.Sitemap = [
     '',
     '/books',
     '/blog',

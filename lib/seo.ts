@@ -11,14 +11,17 @@ interface SEOOptions {
   keywords?: string[];
 }
 
+const FALLBACK_URL = 'https://learnvaultspot.vercel.app';
+
 function cleanUrl(url: string | undefined): string {
-  if (!url) return 'https://learnvault.com';
+  if (!url) return FALLBACK_URL;
   let cleaned = url.replace(/^['"]|['"]$/g, '').trim();
-  if (!cleaned) return 'https://learnvault.com';
+  if (!cleaned) return FALLBACK_URL;
   if (!/^https?:\/\//i.test(cleaned)) {
     cleaned = `https://${cleaned}`;
   }
-  return cleaned.replace(/\/+$/, '');
+  cleaned = cleaned.replace(/\/+$/, '');
+  try { new URL(cleaned); return cleaned; } catch { return FALLBACK_URL; }
 }
 
 /**
