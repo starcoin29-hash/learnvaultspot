@@ -4,8 +4,27 @@ import { getBlogPosts } from '../actions/blog';
 
 export const dynamic = 'force-dynamic';
 
+function getCleanSiteUrl(): string {
+  let url = process.env.NEXT_PUBLIC_APP_URL || '';
+  
+  // Strip surrounding quotes and whitespace
+  url = url.replace(/^['"]|['"]$/g, '').trim();
+  
+  if (!url) {
+    return 'https://learnvault.com'; // Default fallback
+  }
+  
+  // Enforce protocol prefix
+  if (!/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
+  }
+  
+  // Remove trailing slashes
+  return url.replace(/\/+$/, '');
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://learnvault.com';
+  const siteUrl = getCleanSiteUrl();
   
   // Static Routes
   const staticRoutes = [

@@ -1,10 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+function cleanEnvVar(val: string | undefined): string {
+  if (!val) return '';
+  return val.replace(/^['"]|['"]$/g, '').trim();
+}
 
-if (!supabaseUrl) {
+const supabaseUrlRaw = cleanEnvVar(process.env.NEXT_PUBLIC_SUPABASE_URL);
+// Ensure we have a valid absolute URL format for createClient to avoid crash at module evaluation
+const supabaseUrl = supabaseUrlRaw.startsWith('http') ? supabaseUrlRaw : 'https://placeholder.supabase.co';
+
+const supabaseAnonKey = cleanEnvVar(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+const supabaseServiceKey = cleanEnvVar(process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+if (!supabaseUrlRaw) {
   console.warn('Warning: NEXT_PUBLIC_SUPABASE_URL environment variable is missing.');
 }
 

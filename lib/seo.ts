@@ -11,12 +11,22 @@ interface SEOOptions {
   keywords?: string[];
 }
 
+function cleanUrl(url: string | undefined): string {
+  if (!url) return 'https://learnvault.com';
+  let cleaned = url.replace(/^['"]|['"]$/g, '').trim();
+  if (!cleaned) return 'https://learnvault.com';
+  if (!/^https?:\/\//i.test(cleaned)) {
+    cleaned = `https://${cleaned}`;
+  }
+  return cleaned.replace(/\/+$/, '');
+}
+
 /**
  * Generates standard Next.js Metadata objects for App Router pages.
  * Integrates openGraph, twitter, canonical URLs, and schema requirements.
  */
 export function generateSEOMetadata(options: SEOOptions): Metadata {
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://learnvault.com';
+  const siteUrl = cleanUrl(process.env.NEXT_PUBLIC_APP_URL);
   const cleanSlug = options.slug?.startsWith('/') ? options.slug : `/${options.slug || ''}`;
   const canonicalUrl = `${siteUrl}${cleanSlug}`;
   
@@ -89,7 +99,7 @@ export function generateBookSchema(book: {
   ratingValue: string;
   reviewCount: number;
 }) {
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://learnvault.com';
+  const siteUrl = cleanUrl(process.env.NEXT_PUBLIC_APP_URL);
   return {
     '@context': 'https://schema.org',
     '@type': 'Book',
@@ -130,7 +140,7 @@ export function generateArticleSchema(post: {
   publishedDate: string;
   slug: string;
 }) {
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://learnvault.com';
+  const siteUrl = cleanUrl(process.env.NEXT_PUBLIC_APP_URL);
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
