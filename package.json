@@ -23,7 +23,7 @@
     "framer-motion": "^12.0.6",
     "jose": "^5.9.6",
     "lucide-react": "^0.474.0",
-    "next": "15.1.6",
+    "next": "^15.1.7",
     "pdf-lib": "^1.17.1",
     "postgres": "^3.4.5",
     "react": "19.0.0",
@@ -47,7 +47,7 @@
     "@types/uuid": "^10.0.0",
     "drizzle-kit": "^0.30.4",
     "eslint": "^9.19.0",
-    "eslint-config-next": "15.1.6",
+    "eslint-config-next": "^15.1.7",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
